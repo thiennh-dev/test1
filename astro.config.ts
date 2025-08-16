@@ -17,10 +17,16 @@ import rehypeDocument from 'rehype-document'
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
+import cloudflare from '@astrojs/cloudflare';
+import dotenv from 'dotenv';
+
 import tailwindcss from '@tailwindcss/vite'
+dotenv.config();
 
 export default defineConfig({
-  site: 'https://astro-erudite.vercel.app',
+  output: 'server', 
+  adapter: cloudflare(),
+  site: 'https://test1-8od.pages.dev',
   integrations: [
     expressiveCode({
       themes: ['github-light', 'github-dark'],
