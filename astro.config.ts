@@ -24,7 +24,7 @@ import tailwindcss from '@tailwindcss/vite'
 dotenv.config();
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   adapter: cloudflare(),
   site: 'https://test1-8od.pages.dev',
   integrations: [
