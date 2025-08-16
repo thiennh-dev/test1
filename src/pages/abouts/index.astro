@@ -1,0 +1,70 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageHead from "../../components/PageHead.astro";
+---
+
+<Layout class="max-w-svh">
+  <PageHead slot="head" title="Tags" />
+
+  <!-- 🎵 Now Playing Section -->
+  <section class="mb-6 p-4 rounded-xl border border-gray-200 bg-white/50 shadow-lg backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
+    <h2 class="text-lg font-semibold mb-3">🎧 Now Playing on Spotify</h2>
+    <div id="spotify-player" class="flex flex-col sm:flex-row gap-4 items-start sm:items-center text-sm font-mono">
+      <p>Loading Spotify Data...</p>
+    </div>
+  </section>
+
+  <p>
+    Sure! Here's a sample long paragraph of text you can use for testing or filler content:
+    In an increasingly interconnected world, the rapid evolution of technology continues to reshape how we live, communicate, and work...
+    Let me know if you'd like it tailored for a specific topic like tech, history, blog post, or lorem ipsum style!
+  </p>
+
+  <!-- Inject the script -->
+  <script is:inline>
+  const playerElement = document.getElementById('spotify-player');
+
+  function formatTime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  async function fetchNowPlaying() {
+    if (!playerElement) return;
+
+    try {
+      const response = await fetch('/api/spotify.json');
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+
+      const data = await response.json();
+      const fetchTime = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Ho_Chi_Minh' });
+
+      if (data.isPlaying) {
+        playerElement.innerHTML = `
+          <img src="${data.albumImageUrl}" alt="Album cover for ${data.title}" class="w-16 h-16 rounded-md shadow-md" />
+          <div>
+            <p class="font-bold text-base">${data.title}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">${data.artist}</p>
+            <p class="text-xs text-gray-500">${formatTime(data.timestamp)} / ${formatTime(data.duration)}</p>
+            <p class="text-xs text-gray-400 mt-1">Last update: ${fetchTime} (GMT+7)</p>
+          </div>
+        `;
+      } else {
+        playerElement.innerHTML = `
+          <p class="text-gray-600 dark:text-gray-300">Spotify is silent right now.</p>
+          <p class="text-xs text-gray-400 mt-1">Last update: ${fetchTime} (GMT+7)</p>
+        `;
+      }
+    } catch (error) {
+      console.error('Error fetching Now Playing data:', error);
+      playerElement.innerHTML = `<p class="text-red-500">Could not fetch data. Please try again later.</p>`;
+    }
+  }
+
+  fetchNowPlaying();
+  setInterval(fetchNowPlaying, 5000);
+</script>
+
+</Layout>
