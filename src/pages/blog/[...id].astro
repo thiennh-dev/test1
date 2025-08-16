@@ -1,4 +1,5 @@
 ---
+import Badge from '@/components/Badge.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Link from '@/components/Link.astro'
 import PostHead from '@/components/PostHead.astro'
@@ -7,7 +8,6 @@ import SubpostsHeader from '@/components/SubpostsHeader.astro'
 import SubpostsSidebar from '@/components/SubpostsSidebar.astro'
 import TOCHeader from '@/components/TOCHeader.astro'
 import TOCSidebar from '@/components/TOCSidebar.astro'
-import { badgeVariants } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Layout from '@/layouts/Layout.astro'
 import {
@@ -29,7 +29,6 @@ import { Image } from 'astro:assets'
 import { render } from 'astro:content'
 
 export const prerender = true;
-
 
 export async function getStaticPaths() {
   const posts = await getAllPostsAndSubposts()
@@ -201,13 +200,9 @@ const tocSections = await getTOCSections(currentPostId)
             post.data.tags &&
               post.data.tags.length > 0 &&
               post.data.tags.map((tag) => (
-                <a
-                  href={`/tags/${tag}`}
-                  class={badgeVariants({ variant: 'secondary' })}
-                >
-                  <Icon name="lucide:hash" class="size-3" />
-                  {tag}
-                </a>
+                <Link href={`/tags/${tag}`}>
+                  <Badge text={tag} />
+                </Link>
               ))
           }
         </div>
